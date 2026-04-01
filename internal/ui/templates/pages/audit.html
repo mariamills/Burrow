@@ -1,0 +1,27 @@
+{{define "content"}}
+<div class="page-header">
+    <h1>Audit Log</h1>
+</div>
+<div class="card">
+    <table>
+        <thead>
+            <tr><th>Time</th><th>Action</th><th>Namespace</th><th>Key</th><th>Token</th><th>IP</th><th>Status</th></tr>
+        </thead>
+        <tbody id="audit-table">
+            {{range .Events}}
+            <tr>
+                <td class="mono">{{.Timestamp.Format "2006-01-02 15:04:05"}}</td>
+                <td><span class="badge badge-info">{{.Action}}</span></td>
+                <td>{{.Namespace}}</td>
+                <td class="mono">{{.SecretKey}}</td>
+                <td>{{.TokenName}}</td>
+                <td class="mono">{{.IPAddress}}</td>
+                <td>{{.StatusCode}}</td>
+            </tr>
+            {{else}}
+            <tr><td colspan="7" class="text-muted">No audit events</td></tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+{{end}}

@@ -1,0 +1,103 @@
+/* Burrow Dashboard UI - Earthy Burrow Theme */
+:root {
+  --bg: #1a1410;
+  --bg-card: #1f1a14;
+  --bg-input: #0d0b08;
+  --border: #332a1f;
+  --border-hover: #8b6f47;
+  --text: #ede4d8;
+  --text-muted: #9a8d7c;
+  --primary: #67b7d1;
+  --primary-hover: #ddc9a8;
+  --danger: #e57373;
+  --success: #7cb342;
+  --warning: #c4a882;
+  --brown: #8b6f47;
+  --radius: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary-hover); }
+
+/* Layout */
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg-card); border-right: 1px solid var(--border); padding: 1.5rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+.sidebar .logo { padding: 0 1.5rem 1.5rem; font-size: 1.25rem; font-weight: 700; background: linear-gradient(135deg, var(--primary-hover), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.sidebar nav a { display: block; padding: 0.6rem 1.5rem; color: var(--text-muted); font-size: 0.9rem; transition: all 0.15s; }
+.sidebar nav a:hover, .sidebar nav a.active { background: var(--bg); color: var(--text); border-right: 2px solid var(--primary); }
+.main { margin-left: 240px; flex: 1; padding: 2rem; }
+
+/* Cards */
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; transition: border-color 0.2s; }
+.card:hover { border-color: var(--border-hover); }
+.card h2 { margin-bottom: 1rem; font-size: 1.1rem; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th { text-align: left; padding: 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+td { padding: 0.75rem; border-bottom: 1px solid var(--border); }
+tr:hover { background: rgba(103,183,209,0.03); }
+
+/* Forms */
+input, select, textarea { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.6rem 0.8rem; color: var(--text); font-size: 0.9rem; width: 100%; outline: none; transition: border-color 0.2s; }
+input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+label { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; color: var(--text-muted); }
+.form-group { margin-bottom: 1rem; }
+
+/* Buttons */
+.btn { display: inline-block; padding: 0.6rem 1.2rem; border-radius: var(--radius); font-size: 0.9rem; cursor: pointer; border: none; font-weight: 500; transition: all 0.2s; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); color: var(--bg); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { opacity: 0.9; }
+.btn-sm { padding: 0.3rem 0.8rem; font-size: 0.8rem; }
+
+/* Badges */
+.badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+.badge-success { background: rgba(124,179,66,0.15); color: var(--success); }
+.badge-danger { background: rgba(229,115,115,0.15); color: var(--danger); }
+.badge-warning { background: rgba(196,168,130,0.12); color: var(--warning); }
+.badge-info { background: rgba(103,183,209,0.12); color: var(--primary); }
+
+/* Toast */
+.toast { position: fixed; top: 1rem; right: 1rem; padding: 0.8rem 1.2rem; border-radius: var(--radius); background: var(--bg-card); border: 1px solid var(--border); z-index: 1000; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; } }
+
+/* Page header */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.page-header h1 { font-size: 1.5rem; }
+
+/* Utilities */
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mt-1 { margin-top: 0.5rem; }
+.text-muted { color: var(--text-muted); }
+.text-right { text-align: right; }
+.flex { display: flex; gap: 0.5rem; }
+.mono { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 0.85rem; }
+
+/* ── Login Page ── */
+.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+.login-card { width: 400px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; }
+.login-header { text-align: center; margin-bottom: 2rem; }
+.login-logo { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, var(--primary-hover), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+.login-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; }
+.login-error { color: var(--danger); text-align: center; margin-bottom: 1rem; font-size: 0.9rem; }
+.login-btn { width: 100%; padding: 0.7rem; font-size: 0.95rem; }
+.login-footer { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); }
+
+/* ── Sidebar Enhancements ── */
+.sidebar .logo { display: block; text-decoration: none; }
+.sidebar nav a { display: flex; align-items: center; gap: 0.6rem; border-right: 2px solid transparent; }
+.sidebar nav a svg { flex-shrink: 0; opacity: 0.5; }
+.sidebar nav a:hover svg, .sidebar nav a.active svg { opacity: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 1rem 1.5rem; }
+.sidebar-logout { padding: 0 1.5rem; }
+.sidebar-logout-btn { background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; padding: 0.5rem 0; width: 100%; text-align: left; }
+.sidebar-logout-btn:hover { color: var(--danger); }
+
+/* ── Dashboard Stats ── */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-value { font-size: 1.5rem; font-weight: 700; }

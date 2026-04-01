@@ -1,0 +1,47 @@
+{{define "content"}}
+<div class="page-header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="stats-grid">
+    <div class="card">
+        <div class="text-muted mb-1">Namespaces</div>
+        <div class="stat-value">{{.NamespaceCount}}</div>
+    </div>
+    <div class="card">
+        <div class="text-muted mb-1">Active Tokens</div>
+        <div class="stat-value">{{.TokenCount}}</div>
+    </div>
+    <div class="card">
+        <div class="text-muted mb-1">Users</div>
+        <div class="stat-value">{{.UserCount}}</div>
+    </div>
+    <div class="card">
+        <div class="text-muted mb-1">Groups</div>
+        <div class="stat-value">{{.GroupCount}}</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Recent Audit Events</h2>
+    <table>
+        <thead>
+            <tr><th>Time</th><th>Action</th><th>Namespace</th><th>Key</th><th>Token</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            {{range .RecentAudit}}
+            <tr>
+                <td class="mono">{{.Timestamp.Format "2006-01-02 15:04:05"}}</td>
+                <td><span class="badge badge-info">{{.Action}}</span></td>
+                <td>{{.Namespace}}</td>
+                <td class="mono">{{.SecretKey}}</td>
+                <td>{{.TokenName}}</td>
+                <td>{{.StatusCode}}</td>
+            </tr>
+            {{else}}
+            <tr><td colspan="6" class="text-muted">No recent events</td></tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+{{end}}

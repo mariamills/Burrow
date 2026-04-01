@@ -1,0 +1,60 @@
+version: "3.9"
+
+# Burrow Local Development
+#
+# Steps:
+#   1. Copy .env.example to .env and fill in your values
+#   2. docker compose up -d
+#   3. curl http://localhost:8080/health
+#
+services:
+  burrow:
+    build:
+      context: .
+      dockerfile: deployments/Dockerfile
+    container_name: burrow
+    restart: unless-stopped
+    ports:
+      - "${BURROW_PORT:-8080}:8080"
+    environment:
+      # Required - set these in your .env file, DO NOT commit real values.
+      BURROW_ENCRYPTION_KEY: ${BURROW_ENCRYPTION_KEY}
+      BURROW_ROOT_TOKEN: ${BURROW_ROOT_TOKEN}
+
+      # Optional
+      BURROW_PORT:           ${BURROW_PORT:-8080}
+      BURROW_ENV:            ${BURROW_ENV:-development}
+      BURROW_DB_PATH:        /data/burrow.db
+      BURROW_RATE_LIMIT:     ${BURROW_RATE_LIMIT:-60}
+      BURROW_AUDIT_ENABLED:  ${BURROW_AUDIT_ENABLED:-true}
+      BURROW_LOG_LEVEL:      ${BURROW_LOG_LEVEL:-info}
+
+      # TLS (optional for local dev, required for production)
+      # BURROW_TLS_CERT: /certs/cert.pem
+      # BURROW_TLS_KEY:  /certs/key.pem
+
+    volumes:
+      # Persist the SQLite database across container restarts
+      - burrow_data:/data
+      # Uncomment to mount TLS certificates:
+      # - ./certs:/certs:ro
+
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+
+volumes:
+  burrow_data:
+    driver: local
