@@ -1,6 +1,6 @@
 #  Stage 1: Build
 # Use the official Go image to compile the binary
-FROM golang:1.22-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 # Install ca-certificates (needed for HTTPS calls if any) and timezone data.
 RUN apk add --no-cache ca-certificates tzdata
