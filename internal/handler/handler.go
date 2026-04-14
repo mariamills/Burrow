@@ -963,6 +963,47 @@ func (h *Handler) DeactivateUser(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, model.APIResponse{Message: "User deactivated"})
 }
 
+// ResetUserPassword allows an admin to set a new password for a user
+func (h *Handler) ResetUserPassword(w http.ResponseWriter, r *http.Request) {
+	if h.users == nil {
+		writeError(w, http.StatusNotImplemented, "NOT_IMPLEMENTED", "User management is not enabled")
+		return
+	}
+
+	id := pathSegment(r.URL.Path, 3)
+	if id == "" {
+		writeError(w, http.StatusBadRequest, "BAD_REQUEST", "User ID is required")
+		return
+	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+	var req model.ResetPasswordRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "BAD_REQUEST", "Invalid JSON body")
+		return
+	}
+
+	if err := h.users.ResetPassword(id, req.Password); err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			writeError(w, http.StatusNotFound, "NOT_FOUND", "User not found")
+			return
+		}
+		if strings.Contains(err.Error(), "deactivated") {
+			writeError(w, http.StatusConflict, "CONFLICT", "User account is deactivated")
+			return
+		}
+		if strings.Contains(err.Error(), "at least") || strings.Contains(err.Error(), "at most") {
+			writeError(w, http.StatusBadRequest, "BAD_REQUEST", err.Error())
+			return
+		}
+		logger.Error("reset user password", "error", err)
+		writeError(w, http.StatusInternalServerError, "INTERNAL_ERROR", "Failed to reset password")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, model.APIResponse{Message: "Password reset successfully"})
+}
+
 // ── GROUPS ────────────────────────────────────────────────────────────────────
 
 func (h *Handler) groupsCheck(w http.ResponseWriter) bool {

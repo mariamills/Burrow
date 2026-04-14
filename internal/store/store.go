@@ -605,6 +605,15 @@ func (s *Store) DeactivateUser(id string) error {
 	return nil
 }
 
+// UpdateUserPassword updates a user's password hash.
+func (s *Store) UpdateUserPassword(id string, hashedPassword string) error {
+	_, err := s.db.Exec(`UPDATE users SET password = ?, updated_at = ? WHERE id = ?`, hashedPassword, time.Now(), id)
+	if err != nil {
+		return fmt.Errorf("store: update user password failed: %w", err)
+	}
+	return nil
+}
+
 // ============================================================
 // SESSION OPERATIONS
 // ============================================================

@@ -54,6 +54,7 @@ type UserStore interface {
 	GetUserByID(id string) (*model.User, error)
 	ListUsers() ([]*model.User, error)
 	DeactivateUser(id string) error
+	UpdateUserPassword(id string, hashedPassword string) error
 }
 
 // SessionStore defines the persistence contract for user sessions.

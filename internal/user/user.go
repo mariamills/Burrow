@@ -133,6 +133,46 @@ func (s *Service) List() ([]*model.User, error) {
 	return s.store.ListUsers()
 }
 
+// ResetPassword sets a new password for a user (admin-initiated)
+func (s *Service) ResetPassword(userID, newPassword string) error {
+	if userID == "" {
+		return fmt.Errorf("user: user ID is required")
+	}
+	if len(newPassword) < 8 {
+		return fmt.Errorf("user: password must be at least 8 characters")
+	}
+	if len(newPassword) > 72 {
+		return fmt.Errorf("user: password must be at most 72 characters")
+	}
+
+	user, err := s.store.GetUserByID(userID)
+	if err != nil {
+		return fmt.Errorf("user: failed to look up user: %w", err)
+	}
+	if user == nil {
+		return fmt.Errorf("user: not found")
+	}
+	if !user.Active {
+		return fmt.Errorf("user: account is deactivated")
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcryptCost)
+	if err != nil {
+		return fmt.Errorf("user: failed to hash password: %w", err)
+	}
+
+	if err := s.store.UpdateUserPassword(userID, string(hash)); err != nil {
+		return fmt.Errorf("user: failed to update password: %w", err)
+	}
+
+	// Invalidate all existing sessions so the user must re-login
+	if s.sessions != nil {
+		_ = s.sessions.DeleteUserSessions(userID)
+	}
+
+	return nil
+}
+
 // Deactivate marks a user as inactive and invalidates all their sessions
 func (s *Service) Deactivate(id string) error {
 	if err := s.store.DeactivateUser(id); err != nil {

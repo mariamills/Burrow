@@ -166,6 +166,11 @@ type LoginResponse struct {
 	User      *User     `json:"user"`
 }
 
+// ResetPasswordRequest is the request body for PUT /v1/users/{id}/password.
+type ResetPasswordRequest struct {
+	Password string `json:"password"`
+}
+
 // ---- Group Types ----
 
 // Group represents a team or organizational unit.

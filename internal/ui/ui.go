@@ -145,7 +145,7 @@ func (h *Handler) loginPage(w http.ResponseWriter, r *http.Request) {
 	isSecure := r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https"
 	http.SetCookie(w, &http.Cookie{
 		Name: "burrow_csrf", Value: csrfToken, Path: "/ui/",
-		HttpOnly: true, SameSite: http.SameSiteStrictMode, Secure: isSecure,
+		HttpOnly: true, SameSite: http.SameSiteLaxMode, Secure: isSecure,
 	})
 	h.render(w, "login.html", map[string]interface{}{"CSRFToken": csrfToken})
 }
@@ -158,10 +158,18 @@ func generateCSRFToken() string {
 
 func (h *Handler) loginSubmit(w http.ResponseWriter, r *http.Request) {
 	// Validate CSRF token (double-submit cookie pattern)
+	// Generate a fresh CSRF token for any re-render.
+	newCSRF := generateCSRFToken()
+	isSecure := r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https"
+	http.SetCookie(w, &http.Cookie{
+		Name: "burrow_csrf", Value: newCSRF, Path: "/ui/",
+		HttpOnly: true, SameSite: http.SameSiteLaxMode, Secure: isSecure,
+	})
+
 	csrfCookie, err := r.Cookie("burrow_csrf")
 	csrfForm := r.FormValue("csrf_token")
 	if err != nil || csrfCookie.Value == "" || subtle.ConstantTimeCompare([]byte(csrfCookie.Value), []byte(csrfForm)) != 1 {
-		h.render(w, "login.html", map[string]interface{}{"Error": "Invalid request. Please try again."})
+		h.render(w, "login.html", map[string]interface{}{"Error": "Invalid request. Please try again.", "CSRFToken": newCSRF})
 		return
 	}
 
@@ -171,7 +179,8 @@ func (h *Handler) loginSubmit(w http.ResponseWriter, r *http.Request) {
 	u, err := h.users.Authenticate(email, password)
 	if err != nil || u == nil {
 		h.render(w, "login.html", map[string]interface{}{
-			"Error": "Invalid email or password",
+			"Error":     "Invalid email or password",
+			"CSRFToken": newCSRF,
 		})
 		return
 	}
@@ -179,13 +188,12 @@ func (h *Handler) loginSubmit(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.sessions.Create(u.ID, middleware.RealIP(r), r.UserAgent())
 	if err != nil {
 		h.render(w, "login.html", map[string]interface{}{
-			"Error": "Failed to create session",
+			"Error":     "Failed to create session",
+			"CSRFToken": newCSRF,
 		})
 		return
 	}
 
-	// Set Secure flag if TLS is active or behind a trusted proxy
-	isSecure := r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https"
 	http.SetCookie(w, &http.Cookie{
 		Name:     "burrow_session",
 		Value:    resp.Token,

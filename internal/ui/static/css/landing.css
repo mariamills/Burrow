@@ -43,10 +43,13 @@ a:hover { color: var(--sand-light); }
 /* ── Hero ── */
 .hero { text-align: center; padding: 5rem 2rem 3rem; max-width: 780px; margin: 0 auto; }
 .hero-badge { display: inline-flex; align-items: center; background: var(--gopher-blue-glow); color: var(--gopher-blue); padding: 0.35rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem; border: 1px solid rgba(103,183,209,0.2); }
+.hero-badge svg { margin-right: 5px; }
 .hero h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.25rem; letter-spacing: -1px; color: var(--text); }
 .hero h1 .buried-wrap { position: relative; display: inline-block; padding-bottom: 10px; }
 .hero h1 .buried-text { background: linear-gradient(135deg, var(--sand-light) 0%, var(--gopher-blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.hero h1 .burrow-line { position: absolute; bottom: -2px; left: -2%; width: 112%; height: 24px; display: block; }
+.hero h1 .burrow-line { position: absolute; bottom: -1px; left: -2%; width: 112%; height: 24px; display: block; z-index: 0; }
+.hero h1 .buried-text { position: relative; z-index: 1; }
+.hero h1 .hero-period { position: relative; top: 12px; left: 1px; }
 .hero p { font-size: 1.15rem; color: var(--text-muted); line-height: 1.7; max-width: 580px; margin: 0 auto 2rem; }
 .hero-actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
 
@@ -97,7 +100,7 @@ a:hover { color: var(--sand-light); }
 .arch-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--dirt); flex-shrink: 0; }
 
 /* ── Footer ── */
-.footer { text-align: center; padding: 3rem 2rem 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--tunnel); margin-top: 4rem; }
+.footer { text-align: center; padding: 2rem 2rem 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--tunnel); margin-top: 1rem; }
 .footer a { color: var(--gopher-blue); }
 .footer .stack { margin-top: 0.5rem; font-size: 0.8rem; color: var(--dirt); }
 
